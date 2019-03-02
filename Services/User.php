@@ -24,18 +24,34 @@ class User
         $this->email= $params->email;
     }
 
-    public function singUp () {
-        $sql = "INSERT INTO user (name, age, password, email) VALUES (:name, :age, :password, :email)";
-        $stmt = $this->app->db->prepare($sql);
+    public function bindParam ($stmt) {
         $stmt->bindParam('name', $this->name);
         $stmt->bindParam('password', $this->password);
         $stmt->bindParam('age', $this->age);
         $stmt->bindParam('email', $this->email);
+        $stmt->execute();
+    }
+
+    public function singUp () {
+        $sql = "INSERT INTO user (name, age, password, email) VALUES (:name, :age, :password, :email)";
+        $stmt = $this->app->db->prepare($sql);
         try {
-            $stmt->execute();
+            $this->bindParam($stmt);
             return 'success';
         }catch(PDOException $e) {
             return 'Error';
+        }
+    }
+
+    public function updateUser ($args) {
+        $id = $args['id'];
+        $sql = "UPDATE user set name = :name, age = :age, password = :password, email = :email where id = {$id}";
+        $stmt = $this->app->db->prepare($sql);
+        try {
+            $this->bindParam($stmt);
+            return 'Success';
+        }catch(PDOException $e) {
+            return 'error';
         }
 
     }

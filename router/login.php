@@ -17,10 +17,14 @@ $app->group('/api/', function() {
         $Login = new \App\Controllers\User($this);
         $Login->home($req, $res, $args);
     });
-    $this->post('singUp', function($req, $res, $args) {
-        $this->logger->addInfo("/api/singUp Cadastro user");
-        $controller = new \App\Controllers\User($this);
-        $controller->singUp($req, $res, $args);
+    $this->post('user', function($req, $res, $args) {
+        $this->logger->addInfo("/api/user Cadastro user");
+        $controller = new \App\Controllers\User($this, $req);
+        $controller->singUp($res, $args);
     });
-
+    $this->patch('user/{id:[0-9]+}', function($req, $res, $args) {
+       $this->logger->addInfo('/api/user update user');
+       $controller = new \App\Controllers\User($this, $req);
+       $controller->updateUser($res, $args);
+    });
 });
