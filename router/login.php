@@ -21,6 +21,8 @@ $app->group('/api/', function() {
         $this->logger->addInfo("/api/user Cadastro user");
         $controller = new \App\Controllers\User($this, $req);
         $controller->singUp($res, $args);
+        return $res->withJson(['Result' => 'Success'], 200)
+            ->withHeader('Content-type', 'application/json');
     });
     $this->patch('user/{id:[0-9]+}', function($req, $res, $args) {
        $this->logger->addInfo('/api/user update user');

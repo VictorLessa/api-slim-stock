@@ -9,7 +9,8 @@ namespace App\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-
+use PDO;
+use PDOException;
 class User
 {
     private $app;
@@ -29,7 +30,11 @@ class User
     }
 
     public function singUp($res, $args) {
-        return $res->write($this->services->singUp());
+        try {
+            $this->services->singUp();
+        }catch (PDOException $e) {
+            throw new \Exception($e->getMessage(), 500);
+        }
     }
 
     public function updateUser($res, $args) {

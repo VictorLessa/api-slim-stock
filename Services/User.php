@@ -7,6 +7,7 @@
  */
 namespace App\Services;
 use PDO;
+use PDOException;
 class User
 {
     private $app;
@@ -35,24 +36,16 @@ class User
     public function singUp () {
         $sql = "INSERT INTO user (name, age, password, email) VALUES (:name, :age, :password, :email)";
         $stmt = $this->app->db->prepare($sql);
-        try {
-            $this->bindParam($stmt);
-            return 'success';
-        }catch(PDOException $e) {
-            return 'Error';
-        }
+        $result = $this->bindParam($stmt);
+        return $result;
     }
 
     public function updateUser ($args) {
         $id = $args['id'];
         $sql = "UPDATE user set name = :name, age = :age, password = :password, email = :email where id = {$id}";
         $stmt = $this->app->db->prepare($sql);
-        try {
-            $this->bindParam($stmt);
-            return 'Success';
-        }catch(PDOException $e) {
-            return 'error';
-        }
+        $result = $this->bindParam($stmt);
+        return $result;
 
     }
 }
