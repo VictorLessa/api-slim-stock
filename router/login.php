@@ -1,14 +1,10 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Lessa
+ * User: Victor Lessa
  * Date: 01/03/2019
  * Time: 22:05
  */
-
-
-use Slim\Http\Request;
-use Slim\Http\Response;
 
 // Routes
 
@@ -24,7 +20,7 @@ $app->group('/api/', function() {
     });
 
     $this->post('user', function($req, $res, $args) {
-        $this->logger->addInfo("/api/user Cadastro user");
+        $this->logger->addInfo("/api/user SignUp user");
         $controller = new \App\Controllers\User($this);
         return $controller->singUp($req, $res, $args);
     });

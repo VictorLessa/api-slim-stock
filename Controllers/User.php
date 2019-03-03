@@ -26,7 +26,7 @@ class User
     }
 
     public function Error($e) {
-        throw new \Exception($e->getMEssage(), 500);
+        throw new \Exception($e->getMessage(), 500);
     }
 
     public function getUser($req, $res, $args) {
