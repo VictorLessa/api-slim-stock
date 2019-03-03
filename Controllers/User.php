@@ -20,24 +20,53 @@ class User
      * @param [object] $container
      */
 
-    public function __construct($app, $req) {
+    public function __construct($app) {
         $this->app = $app;
-        $this->services = new \App\Services\User($this->app, $req);
+        $this->services = new \App\Services\User($this->app);
     }
 
-    public function home ($res, $args) {
-        return $res->write('teste');
+    public function Error($e) {
+        throw new \Exception($e->getMEssage(), 500);
     }
 
-    public function singUp($res, $args) {
+    public function getUser($req, $res, $args) {
         try {
-            $this->services->singUp();
-        }catch (PDOException $e) {
-            throw new \Exception($e->getMessage(), 500);
+            $result = $this->services->getUser($req, $args);
+            return $res->withJson(['Result' => $result], 200)
+                ->withHeader('Content-type', 'application/json');
+        }catch(PDOException $e) {
+            $this->Error($e);
         }
     }
 
-    public function updateUser($res, $args) {
-        return $res->write($this->services->updateUser($args));
+    public function singUp($req, $res, $args) {
+        try {
+            $this->services->singUp($req);
+            return $res->withJson(['Result' => 'Success'], 200)
+                ->withHeader('Content-type', 'application/json');
+        }catch (PDOException $e) {
+            $this->Error($e);
+        }
+    }
+
+    public function updateUser($req, $res, $args) {
+        try {
+            $this->services->updateUser($req, $args);
+            return $res->withJson(['Result' => 'Success'], 200)
+                ->withHeader('Content-type', 'application/json');
+        }catch(PDOException $e) {
+            $this->Error($e);
+        }
+    }
+
+    public function deleteUser($req, $res, $args) {
+        try {
+            $this->services->deleteUser($req, $args);
+            return $res->withJson(['Result' => 'Success'], 200)
+                ->withHeader('Content-type', 'application/json');
+        }catch(PDOException $e){
+            $this->Error($e);
+        }
+
     }
 }

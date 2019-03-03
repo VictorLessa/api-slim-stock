@@ -17,8 +17,7 @@ use Skeleton\Infrastructure\Slim\Handler\NotFoundHandler;
 $c = $app->getContainer();
 $c['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
-        return $response->withStatus($exception->getCode())
-            ->withHeader('Content-Type', 'application/json')
-            ->withJson(['Status' => 'Error', 'Message' => $exception->getMessage(), 'Code' => $exception->getCode()]);
+        return $response->withJson(['Status' => 'Error', 'Message' => $exception->getMessage(), 'Code' => $exception->getCode()], $exception->getCode())
+            ->withHeader('Content-Type', 'application/json');
     };
 };

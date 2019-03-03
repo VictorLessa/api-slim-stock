@@ -7,7 +7,6 @@
  */
 namespace App\Services;
 use PDO;
-use PDOException;
 class User
 {
     private $app;
@@ -16,36 +15,56 @@ class User
     private $password;
     private $email;
 
-    public function __construct($app, $req) {
-        $params = json_decode($req->getbody());
+    public function __construct($app) {
         $this->app = $app;
-        $this->name = $params->name;
-        $this->age= $params->age;
-        $this->password= $params->password;
-        $this->email= $params->email;
     }
 
-    public function bindParam ($stmt) {
-        $stmt->bindParam('name', $this->name);
-        $stmt->bindParam('password', $this->password);
-        $stmt->bindParam('age', $this->age);
-        $stmt->bindParam('email', $this->email);
+    public function bindParam ($req, $stmt) {
+        $params = json_decode($req->getBody());
+        $stmt->bindParam('name', $params->name);
+        $stmt->bindParam('password', $params->password);
+        $stmt->bindParam('age', $params->age);
+        $stmt->bindParam('email', $params->email);
         $stmt->execute();
     }
 
-    public function singUp () {
+    public function getUser($req, $args) {
+        if (isset($args['id'])) {
+            $id = $args['id'];
+            $sql = "SELECT * FROM user where id = {$id}";
+            $stmt = $this->app->db->query($sql);
+            $stmt->execute();
+            $result = $stmt->fetchALL(PDO::FETCH_OBJ);
+            return $result;
+        } else {
+            $sql = "SELECT * FROM user";
+            $stmt = $this->app->db->query($sql);
+            $stmt->execute();
+            $result = $stmt->fetchALL(PDO::FETCH_OBJ);
+            return $result;
+        }
+    }
+
+    public function singUp ($req) {
         $sql = "INSERT INTO user (name, age, password, email) VALUES (:name, :age, :password, :email)";
         $stmt = $this->app->db->prepare($sql);
-        $result = $this->bindParam($stmt);
+        $result = $this->bindParam($req, $stmt);
         return $result;
     }
 
-    public function updateUser ($args) {
+    public function updateUser ($req, $args) {
         $id = $args['id'];
         $sql = "UPDATE user set name = :name, age = :age, password = :password, email = :email where id = {$id}";
         $stmt = $this->app->db->prepare($sql);
-        $result = $this->bindParam($stmt);
+        $result = $this->bindParam($req, $stmt);
         return $result;
+    }
 
+    public function deleteUser($req, $args) {
+        $id = $args['id'];
+        $sql = "DELETE FROM user where id = {$id}";
+        $stmt = $this->app->db->prepare($sql);
+        $result = $this->bindParam($req, $stmt);
+        return $result;
     }
 }
