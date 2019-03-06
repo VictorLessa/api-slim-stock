@@ -7,13 +7,16 @@
  * Time: 21:59
  */
 
-require __DIR__ . './vendor/autoload.php';
+require 'vendor/autoload.php';
 
 session_start();
 
+$dotenv = Dotenv\Dotenv::create(__DIR__);
+$dotenv->load();
 // Instantiate the app
 $settings = require __DIR__ . './config/settings.php';
 $c = new \Slim\Container($settings);
+
 
 $app = new \Slim\App($c);
 
@@ -38,5 +41,6 @@ $app->add(function ($req, $res, $next) {
         ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
+
 // Run app
 $app->run();
