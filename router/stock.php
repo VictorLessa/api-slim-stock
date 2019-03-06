@@ -7,6 +7,11 @@
  */
 
 $app->group('/api/', function () {
+    $this->get('stock', function ($req, $res, $args) {
+        $controller = new \App\Controllers\Stock($this);
+        return $controller->getStock($req, $res, $args);
+    });
+
    $this->post('stock', function ($req, $res, $args) {
        $controller = new \App\Controllers\Stock($this);
        return $controller->setStock($req, $res, $args);

@@ -23,6 +23,17 @@ class Stock
         throw new \Exception($e->getMessage(), 500);
     }
 
+    public function getStock($req, $res, $args)
+    {
+        try{
+            $result = $this->services->getStock($req, $args);
+            return $res->withJson(['Result' => $result], 200)
+                ->withHeader('Content-type', 'application/json');
+        }catch(PDOException $e){
+
+        }
+    }
+
     public function setStock($req, $res, $args)
     {
         try {
